@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JBsn - Getting the Job Done</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span class="logo-icon">⚡</span>
+                <span class="logo-text">JBsn</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#fetch" class="nav-link">Fetch</a></li>
+                <li><a href="#add" class="nav-link">Add</a></li>
+                <li><a href="#analyze" class="nav-link">Analyze</a></li>
+                <li><a href="#history" class="nav-link">History</a></li>
+            </ul>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">JBsn</h1>
+            <p class="hero-subtitle">getting the job done</p>
+            <p class="hero-description">
+                Financial automation and intelligence platform. 
+                Import your spreadsheets and OFX files, analyze transactions, 
+                and generate actionable insights — all in one place.
+            </p>
+            <div class="hero-actions">
+                <a href="#fetch" class="btn btn-primary">Get Started</a>
+                <a href="#features" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="floating-card card-1">
+                <span class="card-icon">📊</span>
+                <span class="card-text">Analytics</span>
+            </div>
+            <div class="floating-card card-2">
+                <span class="card-icon">📁</span>
+                <span class="card-text">Files</span>
+            </div>
+            <div class="floating-card card-3">
+                <span class="card-icon">💰</span>
+                <span class="card-text">Finance</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">What JBsn Does</h2>
+            <p class="section-subtitle">Four powerful features to automate your financial operations</p>
+            
+            <div class="features-grid">
+                <div class="feature-card" id="fetch">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Fetch</h3>
+                    <p class="feature-description">
+                        Automatically retrieve financial files from external servers. 
+                        Supports scheduled pulls from FTP, SFTP, and API endpoints.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Remote server integration</li>
+                        <li>Scheduled fetch jobs</li>
+                        <li>Auto-detect file formats</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card" id="add">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="12" y1="18" x2="12" y2="12"/>
+                            <line x1="9" y1="15" x2="15" y2="15"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Add</h3>
+                    <p class="feature-description">
+                        Manually upload financial records. Drag and drop spreadsheets 
+                        (XLSX, CSV) and OFX bank statement files.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Drag & drop upload</li>
+                        <li>Batch file processing</li>
+                        <li>Validation & preview</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card" id="analyze">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="20" x2="18" y2="10"/>
+                            <line x1="12" y1="20" x2="12" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Analyze</h3>
+                    <p class="feature-description">
+                        Generate statistics and insights from your financial data. 
+                        Visualize trends, categorize transactions, detect anomalies.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Interactive dashboards</li>
+                        <li>Transaction categorization</li>
+                        <li>Anomaly detection</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card" id="history">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">History</h3>
+                    <p class="feature-description">
+                        Access and download previously processed files. 
+                        Full audit trail with export options in multiple formats.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Complete file history</li>
+                        <li>Export to XLSX, CSV, PDF</li>
+                        <li>Audit logging</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="89">0</span>
+                    <span class="stat-label">Accounts Managed</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="10000">0</span>
+                    <span class="stat-label">Files Processed</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="99">0</span>
+                    <span class="stat-label">% Automation Rate</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="24">0</span>
+                    <span class="stat-label">Hour Support</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2 class="cta-title">Ready to automate your financial operations?</h2>
+            <p class="cta-text">Start processing your spreadsheets and OFX files in minutes.</p>
+            <a href="#fetch" class="btn btn-primary btn-large">Start Now</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-icon">⚡</span>
+                    <span class="logo-text">JBsn</span>
+                    <p class="footer-tagline">getting the job done</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#fetch">Fetch</a>
+                    <a href="#add">Add</a>
+                    <a href="#analyze">Analyze</a>
+                    <a href="#history">History</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 JBsn. Financial Automation Platform.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
