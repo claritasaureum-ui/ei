@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Files - JBsn</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Page-specific styles */
+        .page-content {
+            padding-top: 120px;
+            padding-bottom: 80px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--white) 0%, var(--orange-50) 100%);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 48px;
+            padding: 0 24px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 12px;
+        }
+
+        .page-subtitle {
+            font-size: 1.125rem;
+            color: var(--gray-600);
+        }
+
+        .upload-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .drop-zone {
+            background: var(--white);
+            border: 3px dashed var(--gray-300);
+            border-radius: 20px;
+            padding: 80px 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .drop-zone:hover,
+        .drop-zone.drag-over {
+            border-color: var(--orange-400);
+            background: var(--orange-50);
+            transform: scale(1.01);
+        }
+
+        .drop-zone.drag-over {
+            border-color: var(--orange-500);
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
+        }
+
+        .drop-zone-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, var(--orange-100) 0%, var(--orange-200) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .drop-zone-icon svg {
+            width: 40px;
+            height: 40px;
+            color: var(--orange-600);
+        }
+
+        .drop-zone h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+
+        .drop-zone p {
+            color: var(--gray-600);
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .file-types {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .file-type-badge {
+            background: var(--gray-100);
+            color: var(--gray-600);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .file-type-badge.csv {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .file-type-badge.xlsx {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .file-type-badge.pdf {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .file-type-badge.ofx {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* Pending Uploads Section */
+        .pending-section {
+            margin-top: 48px;
+        }
+
+        .pending-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 0 4px;
+        }
+
+        .pending-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pending-count {
+            background: var(--orange-500);
+            color: var(--white);
+            font-size: 0.85rem;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .upload-all-btn {
+            background: linear-gradient(135deg, var(--orange-500) 0%, var(--orange-600) 100%);
+            color: var(--white);
+            border: none;
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+        }
+
+        .upload-all-btn:hover {
+            background: linear-gradient(135deg, var(--orange-600) 0%, var(--orange-700) 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+        }
+
+        .upload-all-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .pending-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .pending-item {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .pending-item:hover {
+            border-color: var(--orange-300);
+            box-shadow: var(--shadow-md);
+        }
+
+        .file-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gray-100);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .file-icon.csv {
+            background: #dcfce7;
+        }
+
+        .file-icon.xlsx {
+            background: #dbeafe;
+        }
+
+        .file-icon.pdf {
+            background: #fee2e2;
+        }
+
+        .file-icon.ofx {
+            background: #fef3c7;
+        }
+
+        .file-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: var(--gray-900);
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .file-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--gray-600);
+        }
+
+        .file-size {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .file-type {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .remove-btn {
+            background: transparent;
+            border: 1px solid var(--gray-300);
+            color: var(--gray-600);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .remove-btn:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-400);
+            color: var(--gray-800);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray-500);
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            color: var(--gray-300);
+            margin-bottom: 16px;
+        }
+
+        .empty-state p {
+            font-size: 0.95rem;
+        }
+
+        /* Upload Progress Animation */
+        .uploading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .uploading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.1), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .drop-zone {
+                padding: 60px 24px;
+            }
+
+            .drop-zone-icon {
+                width: 64px;
+                height: 64px;
+            }
+
+            .drop-zone-icon svg {
+                width: 32px;
+                height: 32px;
+            }
+
+            .drop-zone h3 {
+                font-size: 1.25rem;
+            }
+
+            .pending-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .pending-item {
+                flex-wrap: wrap;
+            }
+
+            .file-actions {
+                width: 100%;
+                margin-top: 8px;
+            }
+
+            .remove-btn {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">⚡</span>
+                <span class="logo-text">JBsn</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="fetch.html" class="nav-link">Fetch</a></li>
+                <li><a href="add.html" class="nav-link" style="color: var(--orange-600); background: var(--orange-50);">Add</a></li>
+                <li><a href="analyze.html" class="nav-link">Analyze</a></li>
+                <li><a href="history.html" class="nav-link">History</a></li>
+            </ul>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <main class="page-content">
+        <div class="page-header">
+            <h1 class="page-title">Add Files</h1>
+            <p class="page-subtitle">Upload your financial files for processing and analysis</p>
+        </div>
+
+        <div class="upload-container">
+            <!-- Drop Zone -->
+            <div class="drop-zone" id="dropZone">
+                <div class="drop-zone-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                    </svg>
+                </div>
+                <h3>Drag & Drop Files Here</h3>
+                <p>or click to browse from your computer</p>
+                <div class="file-types">
+                    <span class="file-type-badge csv">.csv</span>
+                    <span class="file-type-badge xlsx">.xlsx</span>
+                    <span class="file-type-badge pdf">.pdf</span>
+                    <span class="file-type-badge ofx">.ofx</span>
+                </div>
+                <input type="file" class="file-input" id="fileInput" multiple accept=".csv,.xlsx,.xls,.pdf,.ofx">
+            </div>
+
+            <!-- Pending Uploads Section -->
+            <section class="pending-section">
+                <div class="pending-header">
+                    <h2 class="pending-title">
+                        Pending Uploads
+                        <span class="pending-count" id="pendingCount">0</span>
+                    </h2>
+                    <button class="upload-all-btn" id="uploadAllBtn" disabled>
+                        Upload All
+                    </button>
+                </div>
+
+                <div class="pending-list" id="pendingList">
+                    <!-- Empty State -->
+                    <div class="empty-state" id="emptyState">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        </svg>
+                        <p>No files selected. Drag and drop files above to get started.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // State
+        let pendingFiles = [];
+
+        // DOM Elements
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const pendingList = document.getElementById('pendingList');
+        const pendingCount = document.getElementById('pendingCount');
+        const uploadAllBtn = document.getElementById('uploadAllBtn');
+        const emptyState = document.getElementById('emptyState');
+
+        // Supported file types
+        const supportedTypes = {
+            'csv': { name: 'CSV', icon: '📊', color: 'csv' },
+            'xlsx': { name: 'Excel', icon: '📗', color: 'xlsx' },
+            'xls': { name: 'Excel', icon: '📗', color: 'xlsx' },
+            'pdf': { name: 'PDF', icon: '📄', color: 'pdf' },
+            'ofx': { name: 'OFX', icon: '💰', color: 'ofx' }
+        };
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        // Get file extension
+        function getFileExtension(filename) {
+            return filename.split('.').pop().toLowerCase();
+        }
+
+        // Check if file type is supported
+        function isFileTypeSupported(filename) {
+            const ext = getFileExtension(filename);
+            return ext in supportedTypes;
+        }
+
+        // Update UI
+        function updateUI() {
+            const count = pendingFiles.length;
+            pendingCount.textContent = count;
+            uploadAllBtn.disabled = count === 0;
+
+            if (count === 0) {
+                emptyState.style.display = 'block';
+            } else {
+                emptyState.style.display = 'none';
+            }
+        }
+
+        // Render pending files
+        function renderPendingFiles() {
+            const items = pendingFiles.map((file, index) => {
+                const ext = getFileExtension(file.name);
+                const typeInfo = supportedTypes[ext] || { name: 'Unknown', icon: '📄', color: '' };
+
+                return `
+                    <div class="pending-item" data-index="${index}">
+                        <div class="file-icon ${typeInfo.color}">
+                            ${typeInfo.icon}
+                        </div>
+                        <div class="file-info">
+                            <div class="file-name">${file.name}</div>
+                            <div class="file-meta">
+                                <span class="file-size">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="7 10 12 15 17 10"/>
+                                        <line x1="12" y1="15" x2="12" y2="3"/>
+                                    </svg>
+                                    ${formatFileSize(file.size)}
+                                </span>
+                                <span class="file-type">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                    </svg>
+                                    ${typeInfo.name}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="file-actions">
+                            <button class="remove-btn" onclick="removeFile(${index})">
+                                Remove
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Keep empty state element
+            pendingList.innerHTML = `
+                <div class="empty-state" id="emptyState" style="${pendingFiles.length > 0 ? 'display: none;' : ''}">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                    </svg>
+                    <p>No files selected. Drag and drop files above to get started.</p>
+                </div>
+                ${items}
+            `;
+
+            updateUI();
+        }
+
+        // Add files
+        function addFiles(files) {
+            const validFiles = [];
+            const invalidFiles = [];
+
+            Array.from(files).forEach(file => {
+                if (isFileTypeSupported(file.name)) {
+                    // Check if file already exists
+                    const exists = pendingFiles.some(f => f.name === file.name && f.size === file.size);
+                    if (!exists) {
+                        validFiles.push(file);
+                    }
+                } else {
+                    invalidFiles.push(file.name);
+                }
+            });
+
+            if (invalidFiles.length > 0) {
+                alert(`Unsupported file type(s): ${invalidFiles.join(', ')}\n\nSupported formats: CSV, XLSX, PDF, OFX`);
+            }
+
+            pendingFiles = [...pendingFiles, ...validFiles];
+            renderPendingFiles();
+        }
+
+        // Remove file
+        function removeFile(index) {
+            pendingFiles.splice(index, 1);
+            renderPendingFiles();
+        }
+
+        // Upload all files
+        uploadAllBtn.addEventListener('click', () => {
+            if (pendingFiles.length === 0) return;
+
+            // Add uploading animation
+            const items = document.querySelectorAll('.pending-item');
+            items.forEach(item => item.classList.add('uploading'));
+
+            // Simulate upload (replace with actual upload logic)
+            setTimeout(() => {
+                alert(`Successfully uploaded ${pendingFiles.length} file(s)!`);
+                pendingFiles = [];
+                renderPendingFiles();
+            }, 2000);
+        });
+
+        // Drop zone events
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            addFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            addFiles(e.target.files);
+            fileInput.value = ''; // Reset input
+        });
+
+        // Mobile menu toggle (from original script.js)
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+        }
+    </script>
+</body>
+</html>

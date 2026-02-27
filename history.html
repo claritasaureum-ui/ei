@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History - JBsn</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Page-specific styles */
+        .page-content {
+            padding-top: 120px;
+            padding-bottom: 80px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--white) 0%, var(--orange-50) 100%);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 48px;
+            padding: 0 24px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 12px;
+        }
+
+        .page-subtitle {
+            font-size: 1.125rem;
+            color: var(--gray-600);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .history-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-wrapper {
+            flex: 1;
+            min-width: 280px;
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            font-size: 0.95rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            background: var(--white);
+            color: var(--gray-900);
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--orange-400);
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: var(--gray-400);
+        }
+
+        .filter-dropdown {
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            background: var(--white);
+            color: var(--gray-900);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            min-width: 160px;
+        }
+
+        .filter-dropdown:focus {
+            outline: none;
+            border-color: var(--orange-400);
+        }
+
+        .results-count {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            padding: 12px 0;
+        }
+
+        .results-count strong {
+            color: var(--orange-600);
+            font-weight: 700;
+        }
+
+        /* Data Table Card */
+        .table-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table thead {
+            background: var(--gray-50);
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .data-table th {
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--gray-700);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table tbody tr {
+            border-bottom: 1px solid var(--gray-200);
+            transition: background-color 0.2s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--orange-50);
+        }
+
+        .data-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .data-table td {
+            padding: 16px 20px;
+            font-size: 0.95rem;
+            color: var(--gray-700);
+        }
+
+        /* Table cell styles */
+        .date-cell {
+            font-weight: 600;
+            color: var(--gray-900);
+            white-space: nowrap;
+        }
+
+        .date-time {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .source-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .source-badge.manual {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .source-badge.api {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .source-badge svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .file-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .file-icon.csv {
+            background: #dcfce7;
+        }
+
+        .file-icon.xlsx {
+            background: #dbeafe;
+        }
+
+        .file-icon.pdf {
+            background: #fee2e2;
+        }
+
+        .file-icon.ofx {
+            background: #fef3c7;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .file-meta {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-badge.processed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-badge.failed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-badge.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-action {
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid var(--gray-300);
+            background: var(--white);
+            color: var(--gray-700);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-action:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-400);
+        }
+
+        .btn-action.primary {
+            background: linear-gradient(135deg, var(--orange-500) 0%, var(--orange-600) 100%);
+            border-color: var(--orange-500);
+            color: var(--white);
+        }
+
+        .btn-action.primary:hover {
+            background: linear-gradient(135deg, var(--orange-600) 0%, var(--orange-700) 100%);
+            border-color: var(--orange-600);
+        }
+
+        .btn-action svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            color: var(--gray-500);
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            color: var(--gray-300);
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 0.95rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 24px;
+            background: var(--gray-50);
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .pagination-btn {
+            padding: 8px 14px;
+            border: 1px solid var(--gray-300);
+            background: var(--white);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: var(--gray-100);
+            border-color: var(--gray-400);
+        }
+
+        .pagination-btn.active {
+            background: var(--orange-500);
+            border-color: var(--orange-500);
+            color: var(--white);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination-info {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            padding: 0 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .data-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-wrapper {
+                min-width: 100%;
+            }
+
+            .filter-dropdown {
+                width: 100%;
+            }
+
+            .data-table thead {
+                display: none;
+            }
+
+            .data-table tbody tr {
+                display: block;
+                margin-bottom: 16px;
+                border: 1px solid var(--gray-200);
+                border-radius: 12px;
+                padding: 16px;
+            }
+
+            .data-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 0;
+                border-bottom: 1px solid var(--gray-100);
+            }
+
+            .data-table td:last-child {
+                border-bottom: none;
+                padding-top: 12px;
+                justify-content: flex-start;
+            }
+
+            .data-table td::before {
+                content: attr(data-label);
+                font-weight: 700;
+                color: var(--gray-700);
+                font-size: 0.85rem;
+            }
+
+            .action-buttons {
+                width: 100%;
+            }
+
+            .btn-action {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .pagination {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">⚡</span>
+                <span class="logo-text">JBsn</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="fetch.html" class="nav-link">Fetch</a></li>
+                <li><a href="add.html" class="nav-link">Add</a></li>
+                <li><a href="analyze.html" class="nav-link">Analyze</a></li>
+                <li><a href="history.html" class="nav-link" style="color: var(--orange-600); background: var(--orange-50);">History</a></li>
+            </ul>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <main class="page-content">
+        <div class="page-header">
+            <h1 class="page-title">File History</h1>
+            <p class="page-subtitle">Complete audit trail of all processed files with download and re-run options</p>
+        </div>
+
+        <div class="history-container">
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="filter-row">
+                    <div class="search-wrapper">
+                        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input 
+                            type="text" 
+                            class="search-input" 
+                            id="searchInput" 
+                            placeholder="Search by file name or bank provider..."
+                        >
+                    </div>
+                    <select class="filter-dropdown" id="sourceFilter">
+                        <option value="all">All Sources</option>
+                        <option value="manual">Manual Upload</option>
+                        <option value="api">API Integration</option>
+                    </select>
+                    <select class="filter-dropdown" id="statusFilter">
+                        <option value="all">All Status</option>
+                        <option value="processed">Processed</option>
+                        <option value="failed">Failed</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                </div>
+                <div class="results-count">
+                    Showing <strong id="resultsCount">12</strong> of <strong id="totalCount">12</strong> files
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="table-card">
+                <table class="data-table" id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Source</th>
+                            <th>File Name</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+
+                <!-- Empty State (hidden by default) -->
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <h3>No files found</h3>
+                    <p>Try adjusting your search or filter criteria to find what you're looking for.</p>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" id="pagination">
+                    <button class="pagination-btn" onclick="previousPage()" id="prevBtn">← Previous</button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">2</button>
+                    <button class="pagination-btn">3</button>
+                    <span class="pagination-info">of 3 pages</span>
+                    <button class="pagination-btn" onclick="nextPage()" id="nextBtn">Next →</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Sample data
+        const historyData = [
+            {
+                date: '2026-02-27',
+                time: '09:15',
+                source: 'api',
+                fileName: 'itau_statements_feb_2026.ofx',
+                fileType: 'ofx',
+                bank: 'Itaú',
+                status: 'processed',
+                size: '245 KB'
+            },
+            {
+                date: '2026-02-27',
+                time: '08:42',
+                source: 'manual',
+                fileName: 'bradesco_accounts_q1.xlsx',
+                fileType: 'xlsx',
+                bank: 'Bradesco',
+                status: 'processed',
+                size: '1.2 MB'
+            },
+            {
+                date: '2026-02-26',
+                time: '16:30',
+                source: 'api',
+                fileName: 'bb_transactions_feb_25.pdf',
+                fileType: 'pdf',
+                bank: 'Banco do Brasil',
+                status: 'failed',
+                size: '856 KB'
+            },
+            {
+                date: '2026-02-26',
+                time: '14:22',
+                source: 'manual',
+                fileName: 'nubank_statements_jan.csv',
+                fileType: 'csv',
+                bank: 'Nubank',
+                status: 'processed',
+                size: '124 KB'
+            },
+            {
+                date: '2026-02-26',
+                time: '11:05',
+                source: 'api',
+                fileName: 'santander_daily_extract.ofx',
+                fileType: 'ofx',
+                bank: 'Santander',
+                status: 'processed',
+                size: '198 KB'
+            },
+            {
+                date: '2026-02-25',
+                time: '17:48',
+                source: 'manual',
+                fileName: 'inter_bank_full_statement.xlsx',
+                fileType: 'xlsx',
+                bank: 'Inter',
+                status: 'pending',
+                size: '2.1 MB'
+            },
+            {
+                date: '2026-02-25',
+                time: '15:33',
+                source: 'api',
+                fileName: 'caixa_accounts_feb_2026.csv',
+                fileType: 'csv',
+                bank: 'Caixa',
+                status: 'processed',
+                size: '345 KB'
+            },
+            {
+                date: '2026-02-25',
+                time: '10:20',
+                source: 'manual',
+                fileName: 'btg_pactual_investments.pdf',
+                fileType: 'pdf',
+                bank: 'BTG Pactual',
+                status: 'processed',
+                size: '1.8 MB'
+            },
+            {
+                date: '2026-02-24',
+                time: '09:45',
+                source: 'api',
+                fileName: 'sicoob_rural_credits.ofx',
+                fileType: 'ofx',
+                bank: 'Sicoob',
+                status: 'failed',
+                size: '167 KB'
+            },
+            {
+                date: '2026-02-24',
+                time: '08:12',
+                source: 'manual',
+                fileName: 'sicredi_cooperative_data.xlsx',
+                fileType: 'xlsx',
+                bank: 'Sicredi',
+                status: 'processed',
+                size: '956 KB'
+            },
+            {
+                date: '2026-02-23',
+                time: '16:55',
+                source: 'api',
+                fileName: 'original_bank_daily.csv',
+                fileType: 'csv',
+                bank: 'Original',
+                status: 'processed',
+                size: '234 KB'
+            },
+            {
+                date: '2026-02-23',
+                time: '14:30',
+                source: 'manual',
+                fileName: 'safra_corporate_accounts.pdf',
+                fileType: 'pdf',
+                bank: 'Safra',
+                status: 'processed',
+                size: '1.5 MB'
+            }
+        ];
+
+        // State
+        let filteredData = [...historyData];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
+        // DOM Elements
+        const searchInput = document.getElementById('searchInput');
+        const sourceFilter = document.getElementById('sourceFilter');
+        const statusFilter = document.getElementById('statusFilter');
+        const tableBody = document.getElementById('tableBody');
+        const emptyState = document.getElementById('emptyState');
+        const resultsCount = document.getElementById('resultsCount');
+        const totalCount = document.getElementById('totalCount');
+
+        // File type icons
+        const fileTypeIcons = {
+            'csv': '📊',
+            'xlsx': '📗',
+            'pdf': '📄',
+            'ofx': '💰'
+        };
+
+        // Render table
+        function renderTable() {
+            if (filteredData.length === 0) {
+                tableBody.innerHTML = '';
+                emptyState.style.display = 'block';
+                document.getElementById('pagination').style.display = 'none';
+                resultsCount.textContent = '0';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            document.getElementById('pagination').style.display = 'flex';
+
+            // Pagination
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageData = filteredData.slice(startIndex, endIndex);
+
+            tableBody.innerHTML = pageData.map(item => `
+                <tr>
+                    <td data-label="Date">
+                        <span class="date-cell">${formatDate(item.date)}
+                            <span class="date-time">${item.time}</span>
+                        </span>
+                    </td>
+                    <td data-label="Source">
+                        <span class="source-badge ${item.source}">
+                            ${item.source === 'manual' ? `
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                </svg>
+                                Manual
+                            ` : `
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                API
+                            `}
+                        </span>
+                    </td>
+                    <td data-label="File Name">
+                        <div class="file-info">
+                            <div class="file-icon ${item.fileType}">
+                                ${fileTypeIcons[item.fileType]}
+                            </div>
+                            <div>
+                                <div class="file-name">${item.fileName}</div>
+                                <div class="file-meta">${item.bank} • ${item.size}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td data-label="Status">
+                        <span class="status-badge ${item.status}">
+                            <span class="status-dot"></span>
+                            ${item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+                        </span>
+                    </td>
+                    <td data-label="Action">
+                        <div class="action-buttons">
+                            <button class="btn-action" onclick="downloadFile('${item.fileName}')" title="Download">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                </svg>
+                                Download
+                            </button>
+                            ${item.status !== 'pending' ? `
+                                <button class="btn-action primary" onclick="rerunAnalysis('${item.fileName}')" title="Re-run Analysis">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                    </svg>
+                                    Re-run
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            resultsCount.textContent = filteredData.length;
+            totalCount.textContent = historyData.length;
+        }
+
+        // Format date
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const options = { month: 'short', day: 'numeric', year: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        // Filter data
+        function filterData() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const sourceValue = sourceFilter.value;
+            const statusValue = statusFilter.value;
+
+            filteredData = historyData.filter(item => {
+                const matchesSearch = 
+                    item.fileName.toLowerCase().includes(searchTerm) ||
+                    item.bank.toLowerCase().includes(searchTerm);
+                const matchesSource = sourceValue === 'all' || item.source === sourceValue;
+                const matchesStatus = statusValue === 'all' || item.status === statusValue;
+
+                return matchesSearch && matchesSource && matchesStatus;
+            });
+
+            currentPage = 1;
+            renderTable();
+            updatePagination();
+        }
+
+        // Update pagination
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+        }
+
+        // Pagination controls
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+                updatePagination();
+            }
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+                updatePagination();
+            }
+        }
+
+        // Action handlers
+        function downloadFile(fileName) {
+            alert(`Downloading: ${fileName}\n\nIn production, this would download the actual file.`);
+        }
+
+        function rerunAnalysis(fileName) {
+            if (confirm(`Re-run analysis for: ${fileName}?\n\nThis will process the file again and update the dashboard.`)) {
+                alert(`Analysis queued for: ${fileName}\n\nCheck the Analyze page in a few moments for updated insights.`);
+            }
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', filterData);
+        sourceFilter.addEventListener('change', filterData);
+        statusFilter.addEventListener('change', filterData);
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+        }
+
+        // Initialize
+        renderTable();
+        updatePagination();
+    </script>
+</body>
+</html>
